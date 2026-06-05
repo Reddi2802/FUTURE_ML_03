@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 
 class SkillExtractor:
@@ -45,3 +46,18 @@ class SkillExtractor:
         ]
 
         return list(set(esco_skills + custom_skills))
+
+    def extract_skills(self, text):
+
+        text = text.lower()
+
+        found_skills = set()
+
+        for skill in self.skills:
+
+            pattern = r"\b" + re.escape(skill) + r"\b"
+
+            if re.search(pattern, text):
+                found_skills.add(skill)
+
+        return sorted(found_skills)
