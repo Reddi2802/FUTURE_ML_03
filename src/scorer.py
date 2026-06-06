@@ -6,11 +6,14 @@ class CandidateScorer:
         required_skills
     ):
 
-        if len(required_skills) == 0:
-            return 0
+        candidate_skills = set(candidate_skills)
+        required_skills = set(required_skills)
 
-        matched = set(candidate_skills).intersection(
-            set(required_skills)
+        if len(required_skills) == 0:
+            return 0.0
+
+        matched = candidate_skills.intersection(
+            required_skills
         )
 
         return len(matched) / len(required_skills)

@@ -5,9 +5,11 @@ class PhraseExtractor:
 
     def extract_phrases(self, text):
 
-        phrases = []
+        phrases = set()
 
         lines = text.split("\n")
+
+        inside_requirements = False
 
         for line in lines:
 
@@ -16,7 +18,13 @@ class PhraseExtractor:
             if not line:
                 continue
 
-            # bullet points
+            if "requirements" in line.lower():
+                inside_requirements = True
+                continue
+
+            if not inside_requirements:
+                continue
+
             if line.startswith(("-", "•", "*")):
 
                 phrase = re.sub(
@@ -28,6 +36,6 @@ class PhraseExtractor:
                 phrase = phrase.strip().lower()
 
                 if len(phrase) > 2:
-                    phrases.append(phrase)
+                    phrases.add(phrase)
 
-        return sorted(list(set(phrases)))
+        return sorted(list(phrases))

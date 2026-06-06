@@ -16,6 +16,17 @@ class SkillExtractor:
             .unique()
             .tolist()
         )
+        
+        alt_skills = (
+            skills_df["altLabels"]
+            .dropna()
+            .str.lower()
+            .str.split('\n')
+            .explode()
+            .str.strip()
+            .unique()
+            .tolist()
+        )
 
         custom_skills = [
             "python",
@@ -45,7 +56,7 @@ class SkillExtractor:
             "rag"
         ]
 
-        return list(set(esco_skills + custom_skills))
+        return list(set(esco_skills + alt_skills + custom_skills))
 
     def extract_skills(self, text):
 
@@ -60,4 +71,30 @@ class SkillExtractor:
             if re.search(pattern, text):
                 found_skills.add(skill)
 
-        return sorted(found_skills)
+        found_skills = sorted(
+            found_skills,
+            key=len,
+            reverse=True
+        )
+
+        filtered_skills = []
+
+        for skill in found_skills:
+
+            is_subskill = False
+
+            for kept_skill in filtered_skills:
+
+                pattern = r"\b" + re.escape(skill) + r"\b"
+
+                if re.search(
+                    pattern,
+                    kept_skill
+                ):
+                    is_subskill = True
+                    break
+
+            if not is_subskill:
+                filtered_skills.append(skill)
+
+        return sorted(filtered_skills)

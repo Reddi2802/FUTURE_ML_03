@@ -19,6 +19,10 @@ class ResumeRanker:
         job_description
     ):
 
+        # -------------------------
+        # Extract JD skills
+        # -------------------------
+
         required_skills = set(
             self.extractor.extract_skills(
                 job_description
@@ -34,6 +38,10 @@ class ResumeRanker:
         required_skills = list(required_skills)
 
         results = []
+
+        # -------------------------
+        # Score resumes
+        # -------------------------
 
         for idx, resume in enumerate(resumes):
 
@@ -61,6 +69,22 @@ class ResumeRanker:
                     skill_score
                 )
             )
+            
+            print("\nREQUIRED:", required_skills)
+            print("CANDIDATE:", candidate_skills)
+
+            print(
+                "INTERSECTION:",
+                set(candidate_skills).intersection(
+                    set(required_skills)
+                )
+            )
+
+            matched_skills = list(
+                set(candidate_skills).intersection(
+                    set(required_skills)
+                )
+            )
 
             missing_skills = list(
                 set(required_skills)
@@ -82,7 +106,7 @@ class ResumeRanker:
                     final_score,
                     3
                 ),
-                "matched_skills": candidate_skills,
+                "matched_skills": matched_skills,
                 "missing_skills": missing_skills
             })
 
