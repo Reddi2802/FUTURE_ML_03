@@ -74,13 +74,6 @@ st.markdown("""
     }
 
     /* Upload panel */
-    .upload-panel {
-        background: #0f0f1a;
-        border: 1px solid #1e1e2e;
-        border-radius: 16px;
-        padding: 28px;
-        height: 100%;
-    }
     .upload-panel-title {
         font-size: 14px;
         font-weight: 700;
@@ -130,74 +123,6 @@ st.markdown("""
         opacity: 0.9;
     }
 
-    /* Rankings table */
-    .rank-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: monospace;
-        font-size: 13px;
-    }
-    .rank-table th {
-        text-align: left;
-        color: #64748b;
-        padding: 10px 16px;
-        border-bottom: 1px solid #1e1e2e;
-        font-size: 11px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-    }
-    .rank-table td {
-        padding: 14px 16px;
-        border-bottom: 1px solid #0f0f1a;
-        color: #cbd5e1;
-    }
-    .rank-table tr:hover td {
-        background: #0f0f1a;
-    }
-    .rank-num {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #6ee7b7, #3b82f6);
-        color: #000;
-        font-weight: 800;
-        font-size: 12px;
-    }
-    .score-pill {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-weight: 700;
-        font-size: 13px;
-    }
-    .score-high { background: rgba(110,231,183,0.15); color: #6ee7b7; }
-    .score-mid  { background: rgba(251,191,36,0.15);  color: #fbbf24; }
-    .score-low  { background: rgba(251,113,133,0.15); color: #fb7185; }
-
-    /* Candidate card */
-    .candidate-header {
-        background: #0f0f1a;
-        border: 1px solid #1e1e2e;
-        border-radius: 12px;
-        padding: 20px 24px;
-        margin-bottom: 12px;
-    }
-    .candidate-name {
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 4px;
-    }
-    .candidate-rank {
-        font-size: 12px;
-        color: #6ee7b7;
-        font-family: monospace;
-        letter-spacing: 1px;
-    }
-
     /* Score cards */
     .score-card {
         background: #0f0f1a;
@@ -218,19 +143,6 @@ st.markdown("""
         font-size: 32px;
         font-weight: 800;
         color: #ffffff;
-    }
-
-    /* Summary box */
-    .summary-box {
-        background: #0f0f1a;
-        border-left: 3px solid #6ee7b7;
-        border-radius: 0 12px 12px 0;
-        padding: 18px 20px;
-        font-size: 14px;
-        color: #94a3b8;
-        line-height: 1.7;
-        margin: 16px 0;
-        font-style: italic;
     }
 
     /* Skill tags */
@@ -293,7 +205,7 @@ pipeline = load_pipeline()
 # -------------------------
 st.markdown("""
 <div class="hero">
-    <div class="hero-label">Powered by ESCO + Sentence Transformers + Gemini</div>
+    <div class="hero-label">Powered by ESCO + Sentence Transformers</div>
     <div class="hero-title">AI Resume Screening</div>
     <div class="hero-sub">Upload a job description and resumes → get ranked candidates instantly</div>
 </div>
@@ -366,28 +278,6 @@ if analyze:
             # -------------------------
             st.markdown('<div class="section-title">Rankings</div>', unsafe_allow_html=True)
 
-            def score_pill(score_str):
-                val = int(score_str.replace("%", ""))
-                cls = "score-high" if val >= 60 else "score-mid" if val >= 35 else "score-low"
-                return f'<span class="score-pill {cls}">{score_str}</span>'
-
-            rows = ""
-            for rank, r in enumerate(results, 1):
-                final = f"{r['final_score']:.0%}"
-                semantic = f"{r['semantic_score']:.0%}"
-                skill = f"{r['skill_score']:.0%}"
-                rows += f"""
-                <tr>
-                    <td><span class="rank-num">{rank}</span></td>
-                    <td style="font-weight:600; color:#e2e8f0;">{r['filename']}</td>
-                    <td>{score_pill(final)}</td>
-                    <td style="color:#94a3b8;">{semantic}</td>
-                    <td style="color:#94a3b8;">{skill}</td>
-                    <td style="color:#6ee7b7;">{len(r['matched_skills'])}</td>
-                    <td style="color:#fb7185;">{len(r['missing_skills'])}</td>
-                </tr>
-                """
-
             h1, h2, h3, h4, h5, h6, h7 = st.columns([0.5, 2, 1.5, 1.5, 1.5, 1, 1])
             h1.markdown("**#**")
             h2.markdown("**Candidate**")
@@ -397,17 +287,16 @@ if analyze:
             h6.markdown("**Matched**")
             h7.markdown("**Missing**")
             st.divider()
-            
+
             for rank, r in enumerate(results, 1):
-                final = r['final_score']
-                col1, col2, col3, col4, col5, col6, col7 = st.columns([0.5, 2, 1.5, 1.5, 1.5, 1, 1])
-                col1.markdown(f"**#{rank}**")
-                col2.markdown(f"**{r['filename']}**")
-                col3.markdown(f"`{final:.0%}`")
-                col4.markdown(f"`{r['semantic_score']:.0%}`")
-                col5.markdown(f"`{r['skill_score']:.0%}`")
-                col6.markdown(f"✅ {len(r['matched_skills'])}")
-                col7.markdown(f"❌ {len(r['missing_skills'])}")
+                c1, c2, c3, c4, c5, c6, c7 = st.columns([0.5, 2, 1.5, 1.5, 1.5, 1, 1])
+                c1.markdown(f"**#{rank}**")
+                c2.markdown(f"**{r['filename']}**")
+                c3.markdown(f"`{r['final_score']:.0%}`")
+                c4.markdown(f"`{r['semantic_score']:.0%}`")
+                c5.markdown(f"`{r['skill_score']:.0%}`")
+                c6.markdown(f"✅ {len(r['matched_skills'])}")
+                c7.markdown(f"❌ {len(r['missing_skills'])}")
 
             st.markdown('<hr class="divider">', unsafe_allow_html=True)
 
@@ -419,7 +308,6 @@ if analyze:
             for rank, result in enumerate(results, 1):
                 with st.expander(f"#{rank}  {result['filename']}  —  {result['final_score']:.0%}"):
 
-                    # Score cards
                     c1, c2, c3 = st.columns(3)
                     with c1:
                         st.markdown(f"""
@@ -440,15 +328,8 @@ if analyze:
                             <div class="score-card-value">{result['skill_score']:.0%}</div>
                         </div>""", unsafe_allow_html=True)
 
-                    # Summary
-                    summary = result.get("summary", "")
-                    if summary and not summary.startswith("Summary unavailable"):
-                        st.markdown(f'<div class="summary-box">{summary}</div>', unsafe_allow_html=True)
-                    else:
-                        st.markdown('<div class="summary-box" style="border-color:#64748b; color:#475569;">AI summary unavailable — Gemini quota exceeded. Try again in a moment.</div>', unsafe_allow_html=True)
-
-                    # Skills
                     col_a, col_b = st.columns(2)
+
                     with col_a:
                         st.markdown('<div class="skills-section-title">✅ Matched Skills</div>', unsafe_allow_html=True)
                         if result["matched_skills"]:
