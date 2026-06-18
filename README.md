@@ -8,7 +8,6 @@ An end-to-end AI-powered recruitment tool that ranks candidates against a job de
 - Extracts skills from both using the ESCO skills taxonomy
 - Computes semantic similarity using Sentence Transformers
 - Combines both signals into a final candidate score
-- Generates an AI summary per candidate using Gemini
 - Displays ranked results in a clean Streamlit dashboard
 
 ## How it works
@@ -26,8 +25,6 @@ Skill Overlap Scoring (scorer.py)
      ↓
 Final Score = 70% Semantic + 30% Skill Match
      ↓
-AI Summary via Gemini (summarizer.py)
-     ↓
 Streamlit Dashboard
 ```
 
@@ -35,7 +32,6 @@ Streamlit Dashboard
 
 - **Sentence Transformers** — `all-MiniLM-L6-v2` for semantic embeddings
 - **ESCO Skills Taxonomy** — 13,000+ professional skills with aliases
-- **Google Gemini API** — AI-generated candidate summaries
 - **Streamlit** — interactive web dashboard
 - **pdfplumber / PyMuPDF** — PDF text extraction
 - **pandas** — data processing
@@ -53,7 +49,6 @@ AI-Recruitment-Assistant/
 │   ├── skill_extractor.py
 │   ├── matcher.py
 │   ├── scorer.py
-│   ├── summarizer.py
 │   ├── ranker.py
 │   ├── pipeline.py
 │   ├── pdf_parser.py
